@@ -17,8 +17,8 @@ namespace GestionContact.DAL.Tools
                 Id = (int)reader["Id"],
                 Lastname = (string)reader["Lastname"],
                 Firstname = (string)reader["Firstname"],
-                Phone = (string)reader["Phone"],
-                Email = (string)reader["Email"],
+                Phone = reader["Phone"] is DBNull ? null : (string)reader["Phone"],
+                Email = reader["Email"] is DBNull ? null : (string)reader["Email"],
                 IsActive = (bool)reader["IsActive"]
             };
         }

@@ -35,8 +35,8 @@ namespace GestionContact.DAL.Services
                     cmd.CommandText = sqlQuery;
                     cmd.Parameters.AddWithValue("firstname", contact.Firstname);
                     cmd.Parameters.AddWithValue("lastname", contact.Lastname);
-                    cmd.Parameters.AddWithValue("email", contact.Email);
-                    cmd.Parameters.AddWithValue("phone", contact.Phone);
+                    cmd.Parameters.AddWithValue("email", contact.Email is null ? DBNull.Value : contact.Email);
+                    cmd.Parameters.AddWithValue("phone", contact.Phone is null ? DBNull.Value : contact.Phone);
 
                     bool result;
                     c.Open();
@@ -121,7 +121,7 @@ namespace GestionContact.DAL.Services
 
         public bool Update(Contact contact)
         {
-            string sqlQuery = "UPDATE Contact SET Lastname = @lastname, Firstname = @firstname" +
+            string sqlQuery = "UPDATE Contact SET Lastname = @lastname, Firstname = @firstname," +
                 " Email = @email, Phone = @phone WHERE Id = @id";
 
             using (SqlConnection c = _connection)
@@ -139,6 +139,24 @@ namespace GestionContact.DAL.Services
                     bool result;
                     c.Open();
                     result = cmd.ExecuteNonQuery() > 0;
+                    c.Close();
+                    return result;
+                }
+            }
+        }
+
+        public bool ReActivate(int id)
+        {
+            string sql = "UPDATE Contact SET IsActive = 1 WHERE Id = @id";
+            using(SqlConnection c = _connection)
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    c.Open();
+                    bool result = cmd.ExecuteNonQuery() > 0;
                     c.Close();
                     return result;
                 }

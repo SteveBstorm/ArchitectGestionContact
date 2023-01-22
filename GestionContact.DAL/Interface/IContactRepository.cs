@@ -14,6 +14,6 @@ namespace GestionContact.DAL.Interface
         Contact GetById(int id);
         IEnumerable<Contact> GetAll();
         bool Delete(int id);
-
+        bool ReActivate(int id);
     }
 }
